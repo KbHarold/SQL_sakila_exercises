@@ -75,7 +75,7 @@ CREATE TABLE `actor` (
    `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    PRIMARY KEY (`actor_id`),
    KEY `idx_actor_last_name` (`last_name`)
- ) ENGINE=InnoDB AUTO_INCREMENT=201 DEFAULT CHARSET=utf8
+ ) ENGINE=InnoDB AUTO_INCREMENT=201 DEFAULT CHARSET=utf8;
  
  /*6a. Use JOIN to display the first and last names, as well as the address, of each staff member. 
 Use the tables staff and address:*/
@@ -159,7 +159,7 @@ and you wish to target all family movies for a promotion.
 Identify all movies categorized as family films.*/
 SELECT film.title
 FROM film
-WHERE film.film_id=(
+WHERE film.film_id IN (
 	SELECT film_category.film_id
 	FROM film_category
 	WHERE category_id = 
@@ -172,7 +172,7 @@ WHERE film.film_id=(
 SELECT title, count(rental.inventory_id) AS "Total Rentals"
 FROM film
 INNER JOIN inventory ON film.film_id = inventory.film_id
-INNER JOIN rental ON rental.inventory_id = inventory.film_id
+INNER JOIN rental ON rental.inventory_id = inventory.inventory_id
 GROUP BY title
 ORDER BY count(rental.inventory_id) DESC
 ;
@@ -200,7 +200,7 @@ JOIN inventory ON film_category.film_id = inventory.film_id
 JOIN rental ON inventory.inventory_id = rental.inventory_id
 JOIN payment ON rental.rental_id = payment.rental_id
 GROUP BY category.name
-ORDER BY sum(payment.amount)
+ORDER BY sum(payment.amount) DESC
 LIMIT 5;
 
 /*8a. In your new role as an executive, you would like to have an easy way of viewing the 
@@ -214,7 +214,7 @@ JOIN inventory ON film_category.film_id = inventory.film_id
 JOIN rental ON inventory.inventory_id = rental.inventory_id
 JOIN payment ON rental.rental_id = payment.rental_id
 GROUP BY category.name
-ORDER BY sum(payment.amount)
+ORDER BY sum(payment.amount) DESC
 LIMIT 5);
 
 /*8b. How would you display the view that you created in 8a?*/
@@ -222,3 +222,5 @@ SELECT * FROM sakila.top_by_genre;
 
 /*8c. You find that you no longer need the view top_five_genres. Write a query to delete it.*/
 DROP VIEW sakila.top_by_genre;
+
+select * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS;
